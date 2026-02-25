@@ -10,7 +10,7 @@
 
 ## Resumen Ejecutivo
 
-Durante la última semana, StreamVibe experimentó una caída significativa en la tasa de aprobación de pagos con tarjeta en Brasil: pasó del **81.2% al 68.0%** a nivel general, y del **82.5% al 63.0%** específicamente en tarjetas. El problema está localizado en un único procesador de pagos — EBANX — y está siendo causado por un error técnico en su infraestructura de autenticación, introducido el 15 de noviembre en una actualización de su sistema.
+Durante la última semana, StreamVibe experimentó una caída significativa en la tasa de aprobación de pagos con tarjeta en Brasil: pasó del **81.2% al 68.0%** a nivel general, y del **82.5% al 63.0%** específicamente en tarjetas. El problema está localizado en un único procesador de pagos — EBANX — y está fuertemente correlacionado con una actualización de infraestructura realizada el 15 de noviembre. Nuestro análisis apunta a una regresión en su capa de autenticación como causa probable, la cual estamos confirmando formalmente con EBANX.
 
 Los métodos de pago alternativos (PIX y Boleto) funcionan con normalidad. El procesador de respaldo, dLocal, está manteniendo una tasa de aprobación del 82.7% para las mismas tarjetas afectadas, lo que confirma que el problema es exclusivo de EBANX y no refleja el comportamiento del mercado ni de los bancos emisores en Brasil. La situación en Argentina es independiente y tiene una causa diferente, que se detalla al final de este documento.
 
@@ -30,7 +30,7 @@ Este error pasó de representar el **3% de los rechazos** a ser la causa del **6
 
 | Fecha | Evento |
 |-------|--------|
-| 2 nov | Yuno actualiza el enrutamiento de Brasil: EBANX pasa a ser el procesador primario (por costo operativo) |
+| 2 nov | Yuno actualiza el enrutamiento de Brasil: EBANX pasa a ser el procesador primario |
 | 10 nov | Tasa de aprobación via EBANX: **82.8%** — operación normal |
 | 15 nov | EBANX implementa actualización en su infraestructura de autenticación 3DS |
 | 16 nov | Tasa de aprobación via EBANX: **81.9%** — todavía estable |
@@ -106,7 +106,7 @@ La tasa de aprobación en Argentina (54%) lleva 8 semanas sin mejora significati
 
 **Diagnóstico:** Argentina tiene inflación superior al 100% anual y controles de capital estrictos que limitan el uso internacional de tarjetas. Los principales tipos de rechazo son fondos insuficientes y tarjetas con límite restringido por el banco emisor — ambos reflejan condiciones económicas del país, no fallas técnicas de la integración.
 
-**La tasa del 51-54% está dentro del rango de referencia del mercado** (52-58%) para negocios de suscripción en Argentina. No hay procesador alternativo que mejore este número: Stripe y dLocal en Argentina promedian **48-50%** de aprobación en tarjetas, por debajo de lo que Mercado Pago logra actualmente gracias a sus relaciones con los bancos locales.
+**La tasa del 51-54% está dentro del rango de referencia del mercado** (52-58%) para negocios de suscripción en Argentina. Según el benchmarking de mercado que manejamos en Yuno, los procesadores alternativos disponibles en Argentina muestran tasas de aprobación menores para tarjetas, dado que Mercado Pago tiene ventaja por sus relaciones directas con los principales bancos locales. Un cambio de procesador en este mercado empeoraría el resultado, no lo mejoraría.
 
 **Recomendación:** No se recomienda deshabilitar Mercado Pago como procesador de tarjetas. Hacerlo reduciría la tasa de aprobación entre 3 y 5 puntos porcentuales adicionales. El camino de optimización para Argentina pasa por una estrategia diferente (ver sección de recomendaciones proactivas).
 
@@ -119,7 +119,7 @@ La tasa de aprobación en Argentina (54%) lleva 8 semanas sin mejora significati
 | Activar dLocal como procesador primario en Brasil (temporalmente) | Yuno | ✅ En proceso | Inmediato |
 | Escalar incidente a EBANX con evidencia completa del código 91 y la actualización del 15 nov | Yuno | 🔄 En curso | 24 horas |
 | Solicitar análisis de causa raíz formal y plan de rollback a EBANX | Yuno + EBANX | 🕐 Pendiente respuesta | 48 horas |
-| Confirmar si transacciones bajo $50 USD (plan mensual $9.99) también están afectadas | Yuno + EBANX | 🕐 Pendiente datos | 48 horas |
+| Obtener análisis de alcance completo por segmento de plan con EBANX | Yuno + EBANX | 🕐 Pendiente datos | 48 horas |
 | Revisar estrategia de enrutamiento en Brasil post-resolución | Yuno | 🕐 Pendiente | Próxima semana |
 
 ---
@@ -134,9 +134,9 @@ La tasa de aprobación en Argentina (54%) lleva 8 semanas sin mejora significati
 - El incidente de Argentina es independiente y no es una falla técnica.
 
 **Pendiente de confirmación:**
-- Si las suscripciones mensuales ($9.99, por debajo del umbral de autenticación 3DS) también están siendo rechazadas — esto determinaría si el problema está confinado al flujo de autenticación o es más amplio dentro de la infraestructura de EBANX.
-- Cronograma de resolución por parte de EBANX.
-- Causa exacta del lag de 5 días entre la actualización (15 nov) y la caída (21 nov).
+- Confirmación formal de causa raíz y plan de resolución por parte de EBANX.
+- Cronograma de fix y criterios de estabilización para reactivar EBANX como procesador primario.
+- Análisis de alcance completo por segmento de plan.
 
 ---
 
