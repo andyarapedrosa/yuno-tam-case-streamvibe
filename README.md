@@ -12,23 +12,28 @@ StreamVibe procesa ~$2.3M/mes en Brasil, México, Colombia, Argentina y Chile, c
 
 ## Estructura del Repositorio
 
+Convención de nomenclatura: archivos internos en inglés (`.md`), archivos dirigidos al merchant en español (`-es.md`).
+
 ```
 ├── 00-triage/
-│   └── triage-hypothesis-framework-es.md    # Triage interno TAM: hipótesis, falsas pistas, mapa de evidencia
+│   └── triage-hypothesis-framework.md       # [EN] Triage interno TAM: hipótesis, falsas pistas, mapa de evidencia
 │
 ├── 01-rca/
-│   ├── rca-technical-internal-es.md         # RCA técnico completo (interno)
-│   └── rca-merchant-report-es.md            # Informe de incidente para el merchant
+│   ├── rca-technical-internal.md            # [EN] RCA técnico completo (interno)
+│   └── rca-merchant-report-es.md            # [ES] Informe de incidente para el merchant
 │
 ├── 02-action-plan/
-│   └── action-plan-technical-es.md          # Plan de acción técnico con RACI y timelines
+│   └── action-plan-technical-es.md          # [ES] Plan de acción técnico con RACI y timelines
 │
 ├── 03-merchant-comms/
-│   ├── email-rca-merchant-es.md             # Email de entrega del RCA al merchant
-│   └── speech-pre-call-merchant-es.md       # Guía de llamada pre-call con stakeholders
+│   ├── email-rca-merchant-es.md             # [ES] Email de entrega del RCA al merchant
+│   └── speech-pre-call-merchant-es.md       # [ES] Guía de llamada pre-call con stakeholders
 │
-└── 04-proactive-optimizations/
-    └── proactive-optimizations-es.md        # Recomendaciones proactivas de optimización
+├── 04-proactive-optimizations/
+│   └── proactive-optimizations-es.md        # [ES] Recomendaciones proactivas de optimización
+│
+└── deliverable/
+    └── streamvibe-latam-auth-crisis-final.md # [EN] Documento consolidado final — Secciones 1–4
 ```
 
 ## Hallazgos Clave (TL;DR)
