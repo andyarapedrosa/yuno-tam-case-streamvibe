@@ -1,172 +1,172 @@
-# Section 4: Proactive Optimization Recommendations
+# Sección 4: Recomendaciones de Optimización Proactiva
 
 **Merchant:** StreamVibe
-**Date:** November 25, 2024
-**Prepared by:** Yuno TAM Team
-**Audience:** Claudia Mendez (Head of Payments) · Rafael Santos (CTO)
+**Fecha:** 25 de noviembre, 2024
+**Preparado por:** Equipo Técnico Yuno
+**Audiencia:** Claudia Mendez (Head of Payments) · Rafael Santos (CTO)
 
-> These recommendations are independent of the active Brazil incident. They address structural opportunities in StreamVibe's payments configuration that are leaving measurable revenue on the table today — regardless of EBANX's resolution timeline.
+> Las siguientes recomendaciones son independientes del incidente activo en Brasil. Identifican oportunidades estructurales en la configuración de pagos de StreamVibe que hoy están dejando ingresos sobre la mesa — con independencia del timeline de resolución de EBANX.
 
 ---
 
-## Recommendation 1: Make PIX the Default Checkout Experience in Brazil
+## Recomendación 1: Convertir PIX en la Experiencia Principal de Pago en Brasil
 
-### The Opportunity
+### La Oportunidad
 
-PIX is already StreamVibe's highest-converting payment method in Brazil at **93.0% authorization rate** — 30 points above cards even in a healthy period (82.5%), and 30 points above where cards are today (63.0%). It now represents 24% of Brazil's payment volume after just 6 weeks since launch, which confirms organic adoption is strong.
+PIX ya es el método de pago con mayor tasa de aprobación de StreamVibe en Brasil: **93.0%** — 30 puntos por encima de tarjetas incluso en un período normal (82.5%), y 30 puntos por encima de donde están las tarjetas hoy (63.0%). En solo 6 semanas desde su lanzamiento, PIX representa el 24% del volumen de Brasil, lo que confirma que la adopción orgánica es sólida.
 
-The opportunity is to stop treating PIX as a secondary option and make it structurally prominent in the checkout experience.
+La oportunidad está en dejar de tratar PIX como una opción secundaria y posicionarlo estructuralmente como la primera opción del checkout.
 
-### The Data
+### Los Datos
 
-| Payment Method | Auth Rate | Attempts | Share of Volume |
-|----------------|-----------|----------|-----------------|
-| Cards | 63.0% (crisis) / ~82.5% (normal) | 19,200 | 67.5% |
+| Método de Pago | Tasa de Aprobación | Intentos | % del Volumen |
+|----------------|-------------------|----------|---------------|
+| Tarjetas | 63.0% (crisis) / ~82.5% (normal) | 19,200 | 67.5% |
 | **PIX** | **93.0%** | **6,850** | **24.1%** |
 | Boleto | 78.3% | 2,400 | 8.4% |
 
-If PIX's volume share grows from 24% to 40% of Brazil transactions — a realistic 6-month target for a product with this adoption trajectory — StreamVibe gains ~2,300 additional monthly transactions going through a 93% approval channel instead of a ~83% card channel. At $9.99 average, that's approximately **+$190 in monthly approvals per 1,000 Brazil subscribers** shifted to PIX, with zero processing changes required.
+Si la participación de PIX crece del 24% al 40% del volumen de Brasil — un objetivo realista a 6 meses dado su ritmo de adopción — StreamVibe gana ~2,300 transacciones mensuales adicionales procesadas al 93% de aprobación en lugar del ~83% de tarjetas. A $9.99 de ticket promedio, esto representa aproximadamente **+$190 en aprobaciones mensuales por cada 1,000 suscriptores brasileños** migrados a PIX, sin ningún cambio de procesador.
 
-PIX also settles **instantly** (T+0 vs. T+1 or T+2 for cards), reducing StreamVibe's working capital cycle in Brazil.
+PIX también liquida de forma **instantánea** (T+0 frente a T+1 o T+2 de tarjetas), mejorando el flujo de caja de StreamVibe en Brasil.
 
-### Recommended Actions
+### Acciones Recomendadas
 
-**1. Checkout positioning (product change — low engineering effort):**
-Display PIX as the first and visually prominent option for Brazilian users at checkout — above cards, not below them. A/B test shows that payment method order influences selection significantly for unfamiliar users.
+**1. Reposicionamiento en el checkout (cambio de producto — esfuerzo de ingeniería bajo):**
+Mostrar PIX como la primera opción visible para usuarios brasileños en el checkout — por encima de las tarjetas, no debajo. Los datos de comportamiento en checkout indican que el orden de presentación de métodos de pago influye significativamente en la selección, especialmente para usuarios que no tienen una preferencia preestablecida.
 
-**2. PIX Automático for recurring billing (medium engineering effort):**
-Brazil launched **PIX Automático** (recurring PIX) in 2024 — a framework that allows merchants to initiate recurring PIX debits with customer pre-authorization, similar to a direct debit mandate. This is the first payment method in Brazil that combines PIX's 93%+ approval rate with fully automated recurring billing.
+**2. PIX Automático para cobros recurrentes (esfuerzo de ingeniería medio):**
+Brasil lanzó **PIX Automático** en 2024 — un esquema que permite a los merchants iniciar débitos PIX recurrentes con autorización previa del cliente, similar a un mandato de débito directo. Es el primer método de pago en Brasil que combina la tasa de aprobación del 93%+ de PIX con cobro recurrente totalmente automatizado.
 
-For a subscription business, this is the highest-priority integration opportunity in Brazil: it eliminates both card decline risk and 3DS friction on renewals. Yuno supports PIX Automático — implementation requires StreamVibe to collect PIX mandates from new subscribers at signup.
+Para un negocio de suscripción, esta es la oportunidad de integración de mayor prioridad en Brasil: elimina tanto el riesgo de rechazo de tarjeta como la fricción de autenticación 3DS en las renovaciones. Yuno soporta PIX Automático — la implementación requiere que StreamVibe recolecte mandatos PIX de los nuevos suscriptores durante el proceso de alta.
 
-**3. Annual plan PIX incentive (commercial decision — zero engineering):**
-Offer a modest incentive (e.g., 1 free month, or a small discount) for annual subscribers who pay via PIX. This shifts high-value transactions to the highest-approval channel, improves cash flow (immediate full-year settlement), and reduces renewal churn from card declines on $89.99 transactions.
+**3. Incentivo PIX para el plan anual (decisión comercial — cero ingeniería):**
+Ofrecer un incentivo moderado (por ejemplo, 1 mes gratis o un pequeño descuento) a los suscriptores anuales que paguen vía PIX. Esto traslada las transacciones de mayor valor al canal de mayor aprobación, mejora el flujo de caja (liquidación inmediata del año completo) y reduce el churn por renovación fallida en transacciones de $89.99.
 
-### Expected Impact
+### Impacto Estimado
 
-| Change | Volume Shift | Auth Rate Gain | Estimated Monthly Revenue Impact |
-|--------|-------------|----------------|----------------------------------|
-| PIX as default checkout | +5-10pp PIX share | +93% on shifted volume vs ~83% card | +$2,000–$5,000/month |
-| PIX Automático for renewals | Converts recurring card billing | Eliminates card decline on renewals | +$8,000–$20,000/month (post-integration) |
-| Annual plan PIX incentive | Shifts ~20% annual subs to PIX | Eliminates 3DS friction on $89.99 transactions | Reduces churn by est. 2-3% on annual cohort |
+| Acción | Desplazamiento de Volumen | Efecto en Tasa de Aprobación | Impacto Estimado en Ingresos/Mes |
+|--------|--------------------------|------------------------------|----------------------------------|
+| PIX como default en checkout | +5-10pp de participación PIX | +93% en volumen desplazado vs ~83% tarjeta | +$2,000–$5,000/mes |
+| PIX Automático para renovaciones | Convierte cobros recurrentes de tarjeta | Elimina rechazos de tarjeta en renovaciones | +$8,000–$20,000/mes (post-integración) |
+| Incentivo PIX plan anual | Migra ~20% suscriptores anuales a PIX | Elimina fricción 3DS en transacciones de $89.99 | Reduce churn est. 2-3% en cohorte anual |
 
-**StreamVibe engineering effort:** Low for checkout repositioning (UI change). Medium for PIX Automático (new integration, Yuno provides SDK support).
-
----
-
-## Recommendation 2: Fix Argentina by Solving the Right Problem — Wallet Default + Pricing Strategy
-
-### The Opportunity
-
-Argentina's 54% card authorization rate is not fixable through routing changes — it is at market floor. But StreamVibe's Mercado Pago **wallet** is performing at **66.1%** — 15 points higher than cards, above the 64-70% benchmark, and completely under-utilized. The path to improving Argentina's overall authorization rate is to shift the subscriber mix toward wallet, not to change acquirers.
-
-There is also a structural pricing problem that is independent of payment method but drives the decline pattern: Argentina's annual inflation exceeds 100%. A subscriber who enrolled at $9.99/month when the peso was at X is now facing the same USD charge when their purchasing power has materially deteriorated. This is partially why code 51 (insufficient funds) is the dominant decline reason — not issuer policy, but subscriber financial capacity.
-
-### The Data
-
-| Payment Method | Auth Rate | Benchmark | Gap vs Cards |
-|----------------|-----------|-----------|--------------|
-| Cards (Mercado Pago) | 51.0% | 52-58% | — |
-| **Mercado Pago Wallet** | **66.1%** | 64-70% | **+15.1pp** |
-
-If wallet's share of Argentina volume grows from its current level (2,240 / 11,280 = ~20%) to 40%, StreamVibe gains ~2,200 additional transactions processed at 66% instead of 51%. At $9.99 average, that is approximately **+$330 in monthly approvals per 1,000 Argentina subscribers** shifted to wallet — with no change to the underlying acquirer.
-
-### Recommended Actions
-
-**1. Wallet as default for Argentina (product change — low engineering effort):**
-In the checkout for Argentine users, present Mercado Pago wallet as the primary option — above card entry. Users who have a Mercado Pago account (a large majority of online purchasers in Argentina) will default to the higher-approval path. This is a single-market checkout configuration change.
-
-**2. Wallet enrollment prompt at signup (product change — low effort):**
-For new Argentine subscribers, add a step at signup that prompts wallet linkage. Explain the benefit to the user (faster checkout, no card details needed). This builds a wallet-first subscriber base for Argentina going forward.
-
-**3. Evaluate ARS-denominated pricing or local pricing tiers (commercial decision):**
-This is outside payments infrastructure but worth flagging: a significant portion of Argentina card declines are code 51 (insufficient funds), driven by the erosion of purchasing power relative to USD-denominated pricing. Two options:
-- Introduce a local ARS price tier that adjusts periodically with inflation (common practice for streaming services in Argentina — Netflix, Spotify, Disney+ all use local pricing)
-- Offer a lower-cost entry tier for Argentina specifically
-
-This is not a Yuno recommendation per se — it is a product and commercial decision for StreamVibe. But from a payments perspective, optimizing routing and checkout without addressing the pricing mismatch has a ceiling. If a subscriber genuinely cannot afford the charge, no payment method will authorize it.
-
-**4. Retry strategy for Argentina soft declines:**
-Code 51 (insufficient funds) is a soft decline — it is retryable. Best practice for subscription businesses is to implement a dunning sequence: retry on day 3, day 7, and day 14 after a failed renewal, as subscribers may have received their salary or topped up their account. Yuno can configure this retry cadence. Currently there is no indication StreamVibe has a structured retry flow in Argentina.
-
-### Expected Impact
-
-| Change | Volume Shift | Auth Rate Effect | Estimated Monthly Revenue Impact |
-|--------|-------------|-----------------|----------------------------------|
-| Wallet as default checkout | +10-20pp wallet share | +15pp on shifted volume | +$1,500–$4,000/month |
-| Retry dunning for code 51 | Captures delayed-recovery declines | Recovers est. 10-15% of soft declines | +$800–$2,000/month |
-| Local pricing (ARS tiers) | Reduces code 51 at source | Structural improvement to baseline AR | Strategic — not quantifiable short-term |
-
-**StreamVibe engineering effort:** Low for checkout positioning. Minimal for retry cadence (Yuno configuration). Medium for local pricing tier (product + finance decision, backend pricing changes).
+**Esfuerzo de ingeniería de StreamVibe:** Bajo para el reposicionamiento en checkout (cambio de UI). Medio para PIX Automático (nueva integración — Yuno provee soporte de SDK y especificación técnica).
 
 ---
 
-## Recommendation 3: Tokenization + MIT for Recurring Billing Across All Markets
+## Recomendación 2: Resolver Argentina Atacando el Problema Correcto — Wallet como Default + Estrategia de Pricing
 
-### The Opportunity
+### La Oportunidad
 
-StreamVibe is a subscription business — the majority of its transactions are recurring renewals, not new card entries. Yet there is no indication that StreamVibe is using **tokenization** and **MIT (Merchant Initiated Transaction)** flags systematically for subscription renewals. This is the single highest-leverage technical configuration change available across all five markets.
+La tasa de aprobación de tarjetas en Argentina (54%) no es mejorable a través de cambios de routing — está en el piso del mercado. Sin embargo, la **billetera de Mercado Pago** de StreamVibe está rindiendo al **66.1%** — 15 puntos por encima de tarjetas, por encima del benchmark del mercado (64-70%), y completamente subutilizada. El camino para mejorar la tasa de aprobación global en Argentina es trasladar el mix de suscriptores hacia la billetera, no cambiar de procesador.
 
-Here is what tokenization + MIT unlocks:
+Existe también un problema estructural de pricing que es independiente del método de pago pero que alimenta el patrón de rechazos: la inflación anual en Argentina supera el 100%. Un suscriptor que se dio de alta cuando el peso estaba en X ahora enfrenta el mismo cargo en USD con un poder adquisitivo materialmente deteriorado. Esto explica en parte por qué el código 51 (fondos insuficientes) es el rechazo dominante — no es una política del banco emisor, es la capacidad financiera del suscriptor.
 
-**Higher authorization rates on renewals:** Issuers treat tokenized MIT transactions differently from card-not-present transactions. A recurring charge from a known, tokenized card is statistically less likely to be declined because the issuer has seen the card before and the transaction pattern is predictable.
+### Los Datos
 
-**3DS exemption eligibility for recurring transactions:** Both Brazilian regulations and EMVco standards allow exemptions from 3DS for subsequent recurring payments after the initial CIT (Cardholder Initiated Transaction) is authenticated. If StreamVibe is triggering 3DS on every monthly renewal for existing subscribers, it is adding unnecessary friction — and with EBANX's current 3DS infrastructure issue, it is also adding unnecessary risk. MIT-flagged transactions are exempt from mandatory 3DS challenge.
+| Método de Pago | Tasa de Aprobación | Benchmark | Diferencial vs Tarjeta |
+|----------------|-------------------|-----------|------------------------|
+| Tarjetas (Mercado Pago) | 51.0% | 52-58% | — |
+| **Billetera Mercado Pago** | **66.1%** | 64-70% | **+15.1pp** |
 
-**Reduced PCI scope:** Tokenization means StreamVibe never stores raw card data — the token is stored and used for future charges. This simplifies PCI DSS compliance and reduces the risk surface.
+Si la participación de la billetera en el volumen de Argentina crece del nivel actual (~20%) al 40%, StreamVibe gana ~2,200 transacciones adicionales procesadas al 66% en lugar del 51%. A $9.99 de ticket promedio, esto representa aproximadamente **+$330 en aprobaciones mensuales por cada 1,000 suscriptores argentinos** migrados a billetera — sin ningún cambio de procesador.
 
-**Retry resilience:** A soft decline on a tokenized card can be retried immediately without requiring the subscriber to re-enter payment details. This is critical for recovering the ~18% of EBANX declines that are code 51 (insufficient funds, retryable).
+### Acciones Recomendadas
 
-### The Current State (Inferred)
+**1. Billetera como opción principal en Argentina (cambio de producto — esfuerzo de ingeniería bajo):**
+En el checkout para usuarios argentinos, presentar Mercado Pago wallet como la primera opción — por encima del ingreso de datos de tarjeta. La mayoría de los compradores online en Argentina tienen cuenta de Mercado Pago. Este es un cambio de configuración de checkout específico por mercado.
 
-Based on the pattern of declines — particularly the 3DS-correlated spike in code 91 for what should be repeat subscribers — it is likely that StreamVibe is currently flagging recurring renewals as CIT rather than MIT, and triggering 3DS challenges on established subscribers. This is both a friction and an authorization rate problem.
+**2. Prompt de alta en billetera durante el registro (cambio de producto — esfuerzo bajo):**
+Para nuevos suscriptores argentinos, agregar un paso en el proceso de alta que invite a vincular su billetera de Mercado Pago. Explicar el beneficio para el usuario (checkout más rápido, sin necesidad de ingresar datos de tarjeta). Esto construye una base de suscriptores wallet-first en Argentina de cara al futuro.
 
-### Recommended Actions
+**3. Evaluar pricing en ARS o segmentación de precios local (decisión comercial):**
+Esta recomendación está fuera de la infraestructura de pagos, pero es importante señalarla: una parte significativa de los rechazos de tarjeta en Argentina son código 51 (fondos insuficientes), impulsados por la erosión del poder adquisitivo frente a precios en USD. Dos opciones a considerar:
+- Introducir un nivel de precio en ARS que se ajuste periódicamente con la inflación (práctica habitual de servicios de streaming en Argentina — Netflix, Spotify y Disney+ utilizan precios locales)
+- Ofrecer un nivel de entrada de menor costo específico para Argentina
 
-**1. Tokenize all cards at initial subscription (immediate priority):**
-Ensure that when a subscriber enters their card at signup (CIT), the card is tokenized via Yuno's network tokenization. This token is used for all subsequent renewals. Yuno supports network tokenization for Visa, Mastercard, and Amex across all five of StreamVibe's markets.
+Esta es una decisión de producto y comercial de StreamVibe, no una recomendación de pagos per se. Pero desde la perspectiva de pagos, optimizar routing y checkout sin resolver el desajuste de pricing tiene un techo. Si un suscriptor genuinamente no puede pagar el cargo, ningún método de pago lo va a aprobar.
 
-**2. Flag subscription renewals as MIT:**
-All charges after the initial signup (monthly and annual renewals) should be submitted with the MIT flag and the original transaction reference (the CIT). This:
-- Signals to the issuer that this is a pre-authorized recurring charge
-- Removes the requirement for 3DS on the renewal (eligible for exemption in Brazil)
-- Improves approval rates by 2-5pp on recurring transactions across most LatAm issuers
+**4. Estrategia de reintentos para rechazos blandos en Argentina:**
+El código 51 (fondos insuficientes) es un rechazo blando — es reintentable. La mejor práctica para negocios de suscripción es implementar una secuencia de dunning: reintento en el día 3, día 7 y día 14 después de una renovación fallida, ya que el suscriptor puede haber recibido su sueldo o recargado su cuenta. Yuno puede configurar esta cadencia de reintentos. Actualmente no hay evidencia de que StreamVibe tenga un flujo estructurado de reintentos en Argentina.
 
-**3. Implement credential-on-file update (account updater):**
-A portion of card declines are expired or replaced cards (codes 54 and 14). Yuno's account updater service automatically refreshes stored card tokens when a subscriber's card is reissued — without requiring the subscriber to re-enter their details. This reduces involuntary churn from card expiration, which is particularly relevant for annual subscribers.
+### Impacto Estimado
 
-### Expected Impact
+| Acción | Desplazamiento de Volumen | Efecto en Tasa de Aprobación | Impacto Estimado en Ingresos/Mes |
+|--------|--------------------------|------------------------------|----------------------------------|
+| Billetera como default en checkout | +10-20pp de participación wallet | +15pp en volumen desplazado | +$1,500–$4,000/mes |
+| Dunning de reintentos para código 51 | Captura rechazos recuperables | Recupera est. 10-15% de rechazos blandos | +$800–$2,000/mes |
+| Pricing local (niveles en ARS) | Reduce código 51 en origen | Mejora estructural del baseline de AR | Estratégico — no cuantificable a corto plazo |
 
-| Change | Markets | Auth Rate Impact | Estimated Monthly Revenue Impact |
-|--------|---------|-----------------|----------------------------------|
-| Tokenization + MIT flag for renewals | All 5 | +2-5pp on recurring charges | +$4,600–$11,500/month across all markets |
-| 3DS exemption for MIT in Brazil | Brazil | Eliminates 3DS friction on established subscribers | +1-3pp on Brazil card renewals |
-| Account updater (expired cards) | All 5 | Recovers ~60-70% of code 14/54 declines | +$500–$1,200/month |
-| **Total estimated impact** | | | **+$5,000–$13,000/month** |
-
-**StreamVibe engineering effort:** Medium — requires updating the payment initiation flow to pass MIT flags and store token references per subscription. Yuno provides the SDK, token vault, and account updater infrastructure. Estimated development time: 2-3 sprint cycles. This is the highest-ROI engineering investment available in StreamVibe's payments stack.
-
----
-
-## Summary: Prioritized Recommendations
-
-| Priority | Recommendation | Effort | Monthly Revenue Impact | Time to Value |
-|----------|---------------|--------|----------------------|---------------|
-| **1** | PIX Automático for recurring billing in Brazil | Medium | +$8,000–$20,000 | 4-6 weeks |
-| **2** | Tokenization + MIT for all subscription renewals | Medium | +$5,000–$13,000 | 4-6 weeks |
-| **3** | PIX as default checkout in Brazil | Low | +$2,000–$5,000 | 1-2 weeks |
-| **4** | Mercado Pago wallet default in Argentina | Low | +$1,500–$4,000 | 1-2 weeks |
-| **5** | Argentina retry dunning for code 51 | Low | +$800–$2,000 | 1 week |
-| **6** | Account updater (expired/replaced cards) | Low | +$500–$1,200 | 1-2 weeks |
-
-**Combined potential uplift (conservative): +$17,800–$45,200/month across all markets**
-
-Items 1 and 2 have the highest ceiling and require medium engineering effort. Items 3–6 are quick wins that require minimal or zero engineering changes and can be activated within 1-2 weeks.
+**Esfuerzo de ingeniería de StreamVibe:** Bajo para reposicionamiento en checkout. Mínimo para cadencia de reintentos (configuración de Yuno). Medio para nivel de pricing local (decisión de producto y finanzas, cambios en backend de precios).
 
 ---
 
-## Suggested Next Steps with StreamVibe
+## Recomendación 3: Tokenización + MIT para Cobros Recurrentes en Todos los Mercados
 
-1. **This week:** Agree on items 3, 4, and 5 — low-effort, high-value, no engineering required. These can be activated in days.
-2. **Next 2 weeks:** Scope items 1 and 2 with Rafael's team. Yuno's integration team provides the technical specification and SDK documentation.
-3. **30-day review:** Reassess Argentina card performance after wallet default is active. If still below 54%, discuss local pricing strategy with Claudia and the finance team.
+### La Oportunidad
+
+StreamVibe es un negocio de suscripción — la mayoría de sus transacciones son renovaciones recurrentes, no ingresos de datos de tarjeta nuevos. Sin embargo, no hay evidencia de que StreamVibe esté utilizando **tokenización** y **MIT (Merchant Initiated Transaction — transacción iniciada por el merchant)** de forma sistemática para las renovaciones de suscripción. Esta es la configuración técnica de mayor apalancamiento disponible en los cinco mercados.
+
+Lo que habilita la combinación de tokenización + MIT:
+
+**Mayor tasa de aprobación en renovaciones:** Los bancos emisores tratan las transacciones MIT tokenizadas de forma diferente a las transacciones card-not-present estándar. Un cargo recurrente de una tarjeta conocida y tokenizada tiene estadísticamente menor probabilidad de ser rechazado porque el banco ya conoce la tarjeta y el patrón de transacción es predecible.
+
+**Elegibilidad para exención de 3DS en transacciones recurrentes:** Tanto la regulación brasileña como los estándares de EMVco permiten exenciones de 3DS para pagos recurrentes posteriores, una vez que la transacción inicial (CIT — Cardholder Initiated Transaction) ha sido autenticada. Si StreamVibe está activando 3DS en cada renovación mensual de suscriptores ya establecidos, está generando fricción innecesaria — y con el problema actual de infraestructura 3DS de EBANX, también está generando riesgo innecesario. Las transacciones con flag MIT son elegibles para exención de desafío 3DS obligatorio.
+
+**Reducción del alcance PCI:** La tokenización implica que StreamVibe nunca almacena datos de tarjeta en crudo — el token se almacena y se usa para cargos futuros. Esto simplifica el cumplimiento de PCI DSS y reduce la superficie de riesgo.
+
+**Resiliencia en reintentos:** Un rechazo blando en una tarjeta tokenizada puede reintentarse de inmediato sin requerir que el suscriptor vuelva a ingresar sus datos. Esto es fundamental para recuperar el ~18% de rechazos de EBANX que son código 51 (fondos insuficientes, reintentable).
+
+### Estado Actual (Inferido)
+
+Con base en el patrón de rechazos — particularmente el spike de código 91 correlacionado con 3DS en lo que deberían ser suscriptores ya establecidos — es probable que StreamVibe esté marcando las renovaciones recurrentes como CIT en lugar de MIT, activando desafíos 3DS en suscriptores con historial previo. Esto es tanto un problema de fricción como de tasa de aprobación.
+
+### Acciones Recomendadas
+
+**1. Tokenizar todas las tarjetas en la suscripción inicial (prioridad inmediata):**
+Asegurar que cuando un suscriptor ingresa su tarjeta en el alta (CIT), la tarjeta sea tokenizada a través de la tokenización de red de Yuno. Este token se utiliza para todas las renovaciones posteriores. Yuno soporta tokenización de red para Visa, Mastercard y Amex en los cinco mercados de StreamVibe.
+
+**2. Marcar las renovaciones de suscripción como MIT:**
+Todos los cargos posteriores al alta inicial (renovaciones mensuales y anuales) deben enviarse con el flag MIT y la referencia de la transacción original (el CIT). Esto:
+- Le señala al banco emisor que se trata de un cargo recurrente pre-autorizado
+- Elimina el requerimiento de 3DS en la renovación (elegible para exención en Brasil)
+- Mejora las tasas de aprobación entre 2 y 5 puntos porcentuales en transacciones recurrentes en la mayoría de los emisores de LatAm
+
+**3. Implementar actualización automática de credenciales (account updater):**
+Una parte de los rechazos de tarjeta corresponde a tarjetas vencidas o reemplazadas (códigos 54 y 14). El servicio de account updater de Yuno refresca automáticamente los tokens almacenados cuando la tarjeta de un suscriptor es reemitida — sin requerir que el suscriptor vuelva a ingresar sus datos. Esto reduce el churn involuntario por vencimiento de tarjeta, especialmente relevante para suscriptores de plan anual.
+
+### Impacto Estimado
+
+| Acción | Mercados | Efecto en Tasa de Aprobación | Impacto Estimado en Ingresos/Mes |
+|--------|----------|------------------------------|----------------------------------|
+| Tokenización + flag MIT para renovaciones | Todos (5) | +2-5pp en cargos recurrentes | +$4,600–$11,500/mes |
+| Exención 3DS para MIT en Brasil | Brasil | Elimina fricción 3DS en suscriptores establecidos | +1-3pp en renovaciones de tarjeta Brasil |
+| Account updater (tarjetas vencidas) | Todos (5) | Recupera ~60-70% de rechazos código 14/54 | +$500–$1,200/mes |
+| **Impacto total estimado** | | | **+$5,000–$13,000/mes** |
+
+**Esfuerzo de ingeniería de StreamVibe:** Medio — requiere actualizar el flujo de iniciación de pagos para enviar flags MIT y almacenar referencias de token por suscripción. Yuno provee el SDK, el vault de tokens y la infraestructura de account updater. Tiempo estimado de desarrollo: 2-3 sprints. Esta es la inversión de ingeniería de mayor ROI disponible en el stack de pagos de StreamVibe.
+
+---
+
+## Resumen: Recomendaciones Priorizadas
+
+| Prioridad | Recomendación | Esfuerzo | Impacto en Ingresos/Mes | Tiempo al Valor |
+|-----------|--------------|----------|------------------------|-----------------|
+| **1** | PIX Automático para cobros recurrentes en Brasil | Medio | +$8,000–$20,000 | 4-6 semanas |
+| **2** | Tokenización + MIT para todas las renovaciones | Medio | +$5,000–$13,000 | 4-6 semanas |
+| **3** | PIX como default en checkout (Brasil) | Bajo | +$2,000–$5,000 | 1-2 semanas |
+| **4** | Billetera Mercado Pago como default (Argentina) | Bajo | +$1,500–$4,000 | 1-2 semanas |
+| **5** | Dunning de reintentos para código 51 (Argentina) | Bajo | +$800–$2,000 | 1 semana |
+| **6** | Account updater (tarjetas vencidas/reemplazadas) | Bajo | +$500–$1,200 | 1-2 semanas |
+
+**Potencial de mejora combinado (estimación conservadora): +$17,800–$45,200/mes en todos los mercados**
+
+Los ítems 1 y 2 tienen el mayor techo de impacto y requieren esfuerzo de ingeniería medio. Los ítems 3 al 6 son ganancias rápidas que no requieren cambios de ingeniería o son mínimos, activables en 1-2 semanas.
+
+---
+
+## Próximos Pasos Sugeridos
+
+1. **Esta semana:** Acordar los ítems 3, 4 y 5 — bajo esfuerzo, alto valor, sin ingeniería requerida. Pueden activarse en días.
+2. **Próximas 2 semanas:** Definir el alcance de los ítems 1 y 2 con el equipo de Rafael. El equipo de integraciones de Yuno provee la especificación técnica y documentación de SDK.
+3. **Revisión a 30 días:** Reevaluar la performance de tarjetas en Argentina después de activar la billetera como default. Si sigue por debajo del 54%, iniciar la conversación sobre estrategia de pricing local con Claudia y el equipo de finanzas.
