@@ -1,39 +1,41 @@
-# StreamVibe LatAm Authorization Crisis — TAM Case Study
+# StreamVibe — Crisis de Autorización LatAm: Caso TAM
 
-**Merchant:** StreamVibe (video streaming, Latin America)
-**Period analyzed:** Last 30 days (as of Nov 25, 2024)
-**Incident status:** Active — Brazil cards, EBANX-specific
+**Merchant:** StreamVibe (plataforma de streaming de video, América Latina)
+**Período analizado:** Últimos 30 días (al 25 de nov de 2024)
+**Estado del incidente:** Activo — tarjetas Brasil, exclusivo de EBANX
 
 ---
 
-## Context
+## Contexto
 
-StreamVibe processes ~$2.3M/month across Brazil, Mexico, Colombia, Argentina, and Chile with 87,000 active subscribers. Three days ago, their Head of Payments flagged a drop in Brazil authorization rates. This repository contains the full technical analysis, incident report, and action plan produced in response.
+StreamVibe procesa ~$2.3M/mes en Brasil, México, Colombia, Argentina y Chile, con 87,000 suscriptores activos. Hace tres días, su Head of Payments reportó una caída en las tasas de aprobación de Brasil. Este repositorio contiene el análisis técnico completo, el informe del incidente y el plan de acción producidos en respuesta.
 
-## Repository Structure
+## Estructura del Repositorio
 
 ```
 ├── 00-triage/
-│   └── triage-hypothesis-framework.md   # Internal TAM triage: hypotheses, red herrings, evidence map
+│   └── triage-hypothesis-framework-es.md    # Triage interno TAM: hipótesis, falsas pistas, mapa de evidencia
 │
 ├── 01-rca/
-│   ├── rca-technical-internal.md        # Full technical RCA (internal, English)
-│   └── rca-merchant-report-es.md        # Merchant-facing incident report (Spanish)
+│   ├── rca-technical-internal-es.md         # RCA técnico completo (interno)
+│   └── rca-merchant-report-es.md            # Informe de incidente para el merchant
 │
-├── 02-action-plan/                      # (in progress)
-│   └── ...
+├── 02-action-plan/
+│   └── action-plan-technical-es.md          # Plan de acción técnico con RACI y timelines
 │
-├── 03-merchant-comms/                   # (in progress)
-│   └── ...
+├── 03-merchant-comms/
+│   ├── email-rca-merchant-es.md             # Email de entrega del RCA al merchant
+│   └── speech-pre-call-merchant-es.md       # Guía de llamada pre-call con stakeholders
 │
-└── 04-proactive-optimizations/          # (in progress)
-    └── ...
+└── 04-proactive-optimizations/
+    └── proactive-optimizations-es.md        # Recomendaciones proactivas de optimización
 ```
 
-## Key Findings (TL;DR)
+## Hallazgos Clave (TL;DR)
 
-- **Brazil crisis is EBANX-only.** dLocal achieves 82.7% AR on the same cards/issuers.
-- **Root cause:** EBANX's Nov 15 3DS2 Directory Server v2.2 upgrade caused systemic issuer timeout errors (code 91, +829%).
-- **Brazil card AR:** dropped from 82.5% → 63.0% (-19.5pp). Net ~3,744 lost approvals/month.
-- **Argentina is not a technical issue.** It's at market floor (51% vs 52-58% benchmark). Macroeconomic.
-- **Immediate mitigation:** Yuno re-routed Brazil primary to dLocal while EBANX investigates.
+- **La crisis en Brasil es exclusiva de EBANX.** dLocal alcanza 82.7% AR en las mismas tarjetas y emisores.
+- **Causa probable:** La actualización del Directory Server v2.2 de EBANX del 15 de nov causó errores sistémicos de timeout en el emisor (código 91, +829%).
+- **Tasa de aprobación de tarjetas Brasil:** cayó de 82.5% → 63.0% (-19.5pp). ~3,744 aprobaciones perdidas/mes neto.
+- **Argentina no es un problema técnico.** Está en el piso del mercado (51% vs benchmark 52-58%). Causa macroeconómica.
+- **Mitigación inmediata:** Yuno re-enrutó el primario de Brasil a dLocal mientras EBANX investiga.
+- **Impacto estimado en ingresos:** $37K–$130K/mes en riesgo (dependiendo del mix de planes).
