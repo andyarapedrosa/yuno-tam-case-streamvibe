@@ -15,7 +15,9 @@ This document consolidates the complete technical analysis and response produced
 
 Argentina's low authorization rate (54%) is a separate, unrelated issue with macroeconomic causes. It is not a technical incident and is treated as such throughout this document.
 
-**Estimated revenue at risk:** $37K–$130K/month (depending on plan mix), recoverable with the actions described herein.
+**Estimated revenue at risk:** $37K–$130K/month in direct billing losses (depending on plan mix); $56K–$318K/month churn-adjusted. Both figures are recoverable with the actions described herein. With the proposed 50/50 EBANX-dLocal routing split and proactive optimizations in Section 4, Brazil card authorization rate is expected to stabilize at **83-86%** — above the pre-incident baseline.
+
+> For a one-page summary in Spanish for distribution to StreamVibe stakeholders, see [`executive-summary-es.md`](./executive-summary-es.md).
 
 ---
 
@@ -38,11 +40,12 @@ Argentina's low authorization rate (54%) is a separate, unrelated issue with mac
    - 2.3 Workstream B: Structural Hardening
    - 2.4 RACI Summary
    - 2.5 What StreamVibe Engineering Needs to Do
+   - 2.6 Recovery KPIs — 30/60/90-Day Milestones
 
 3. [Merchant Communication Package](#section-3-merchant-communication-package)
-   - 3.1 RCA Delivery Email
-   - 3.2 Merchant-Facing Incident Report
-   - 3.3 Pre-Call Speech Guide
+   - 3.1 Pre-Call Speech Guide
+   - 3.2 RCA Delivery Email
+   - 3.3 Merchant-Facing Incident Report
 
 4. [Proactive Optimization Recommendations](#section-4-proactive-optimization-recommendations)
    - 4.1 Recommendation 1: Make PIX the Primary Payment Experience in Brazil
@@ -248,7 +251,7 @@ Argentina is excluded from this plan — it requires a separate strategic discus
 | P1 | EBANX: formal RCA + fix ETA | EBANX | 48–72h | Closes root cause loop |
 | P2 | Retry logic for soft decline code 91 | Yuno | 1 week | Recovers retryable declines |
 | P2 | Brazil routing split post-resolution | Yuno | Post-fix | Eliminates single-acquirer exposure |
-| P3 | Acquirer health monitoring + auto-failover | Yuno | 2–3 weeks | Reduces detection time from days to hours |
+| P2 | Acquirer health monitoring + auto-failover | Yuno | 2–3 weeks | Reduces detection time from 6 days to <24h |
 | P3 | 3DS threshold review for Brazil | Yuno + StreamVibe | 2–3 weeks | Reduces unnecessary friction on annual plans |
 
 ---
@@ -376,15 +379,15 @@ The prior 70/30 configuration created concentration risk — when EBANX degraded
 
 ---
 
-### B2 — Acquirer Health Monitoring + Auto-Failover [P3]
+### B2 — Acquirer Health Monitoring + Auto-Failover [P2]
 **Owner:** Yuno | **Timeline:** 2–3 weeks
+
+> **Priority rationale — upgraded from P3 to P2:** Had this monitoring been active on November 15, the EBANX degradation would have triggered an alert within 24-48 hours. Instead, detection took 6 days. The additional exposure from days 2-6 of the incident represents an estimated $6K–$25K in incremental revenue loss beyond what would have occurred with immediate detection. The cost of implementing this monitoring is entirely on Yuno's side.
 
 Implement real-time acquirer health monitoring with automated failover triggers:
 - **Alert threshold:** if any acquirer's hourly AR drops >5pp below its 7-day baseline → alert to Yuno TAM + ops
 - **Hard failover threshold:** if any acquirer's hourly AR drops >15pp below baseline → automatically route 100% of that acquirer's traffic to fallback
 - **Code-specific monitoring:** spike in code 91 or code 05 above 2× baseline → alert, regardless of overall AR
-
-**Context:** In this incident, EBANX's rate degraded from Nov 15 to Nov 21 before detection. This system would have flagged the anomaly within 24-48 hours of the Nov 15 upgrade, not 6 days later.
 
 **Expected impact:** Reduces detection-to-mitigation time from ~6 days to <24 hours for future acquirer-side incidents.
 **StreamVibe engineering requirement:** None.
@@ -452,6 +455,18 @@ Current 3DS trigger in Brazil is set at **>$50 USD**. StreamVibe's pricing:
 
 ---
 
+## 2.6 Recovery KPIs — 30/60/90-Day Milestones
+
+| Milestone | Target | Date |
+|-----------|--------|------|
+| **30 days** | EBANX reactivation decision made (reactivate with 50/50 split or permanently remove); B2 acquirer health monitoring live; A2.1 + A2.2 data received and root cause classification finalized | Dec 25, 2024 |
+| **60 days** | B1 50/50 routing split active in production; code 91 rate at EBANX ≤5% sustained for 2+ weeks; Section 4 quick wins (PIX default, wallet default, dunning) live | Jan 25, 2025 |
+| **90 days** | Tokenization + MIT flag implemented across all 5 markets; PIX share of Brazil volume ≥30%; Brazil card AR at **83-86%** sustained | Feb 25, 2025 |
+
+If EBANX does not meet reactivation criteria by the 30-day mark, the 60-day milestone shifts to a permanent dLocal-primary strategy with EBANX as secondary/fallback at ≤20% volume.
+
+---
+
 ---
 
 # Section 3: Merchant Communication Package
@@ -460,182 +475,9 @@ Current 3DS trigger in Brazil is set at **>$50 USD**. StreamVibe's pricing:
 
 ---
 
-## 3.1 RCA Delivery Email
+## 3.1 Pre-Call Speech Guide
 
-**To:** claudia.mendez@streamvibe.com
-**CC:** rafael.santos@streamvibe.com
-**Subject:** [StreamVibe] Root cause analysis — Brazil approval rate drop
-**Date:** November 25, 2024
-
----
-
-Claudia, Rafael,
-
-Sharing the formal analysis of what is happening with Brazil's approval rates.
-
-**The key points in three bullets:**
-
-1. **The problem has been identified and localized.** The card decline (from 82.5% to 63.0%) is strongly correlated with an infrastructure update EBANX performed on November 15. Our analysis points to a regression in their authentication layer as the probable cause — which we are formally confirming with them. The rest of the ecosystem — PIX, Boleto, and dLocal — is operating normally.
-
-2. **Mitigation is already active.** We activated dLocal as the primary processor in Brazil on Yuno's side. This required no technical changes from StreamVibe. Transactions are being processed normally by dLocal (82.7% approval rate) while we work with EBANX on the definitive resolution.
-
-3. **Argentina is a separate issue.** The 54% rate in Argentina is not a technical failure — it is within local market benchmark and has macroeconomic causes. Disabling Mercado Pago would worsen that number. I explain it in detail in the attached report.
-
----
-
-The attached document covers in detail: incident timeline, evidence confirming the root cause, what we ruled out, estimated revenue impact, and actions in progress with owners and timelines.
-
-We'll be in touch to coordinate the follow-up call. Any questions before then, I'll respond immediately.
-
-Best,
-[TAM Name]
-Technical Account Manager — Yuno
-[email] | [phone]
-
----
-> 📎 Attachment: `streamvibe-brazil-auth-rate-rca-nov2024.pdf`
-
----
-
-## 3.2 Merchant-Facing Incident Report
-
-**Incident status:** Active — under resolution
-**Audience:** Claudia Mendez (Head of Payments) · Rafael Santos (CTO)
-
-### Executive Summary
-
-Over the past week, StreamVibe experienced a significant drop in card payment approval rates in Brazil: from **81.2% to 68.0%** overall, and from **82.5% to 63.0%** for cards specifically. The problem is localized to a single payment processor — EBANX — and is strongly correlated with an infrastructure update performed on November 15. Our analysis points to a regression in their authentication layer as the probable cause, which we are formally confirming with EBANX.
-
-Alternative payment methods (PIX and Boleto) are functioning normally. The fallback processor, dLocal, is maintaining an 82.7% approval rate for the same affected cards, confirming the problem is exclusive to EBANX and does not reflect the behavior of the Brazilian market or issuing banks. The Argentina situation is independent with a different cause, detailed at the end of this report.
-
----
-
-### What Is Happening?
-
-When a customer attempts to pay by card in Brazil, the transaction goes through an identity verification process called **3DS authentication** (where the bank asks the customer to confirm the purchase via SMS, app, or password). EBANX acts as the intermediary between StreamVibe and the issuing banks to manage this process.
-
-On November 15, EBANX performed a technical update to the server that manages these authentications. Starting November 20, that server began generating excessive response times when communicating with Brazilian issuing banks. As a result, banks interpret the lack of timely response and decline the transaction with error code **91 ("issuer timeout")**.
-
-This error went from representing **3% of declines** to causing **62.8% of all EBANX declines**, with an increase of **829%** in absolute volume. All other decline types (insufficient funds, expired card, etc.) remain at normal levels.
-
----
-
-### Incident Timeline
-
-| Date | Event |
-|------|--------|
-| Nov 2 | Yuno updates Brazil routing: EBANX becomes primary processor |
-| Nov 10 | Approval rate via EBANX: **82.8%** — normal operation |
-| Nov 15 | EBANX implements update to its 3DS authentication infrastructure |
-| Nov 16 | Approval rate via EBANX: **81.9%** — still stable |
-| Nov 20-21 | Banco do Brasil scheduled maintenance (3DS) — marked complete Nov 21 evening |
-| Nov 21 | EBANX approval rate drops to **68.2%**. Timeout error rises from ~3% to 61% of declines |
-| Nov 24 | EBANX approval rate: **54.6%** — continues deteriorating |
-| Nov 25 | Yuno has activated mitigation via dLocal. Active escalation with EBANX |
-
----
-
-### Evidence Confirming the Root Cause
-
-**1. dLocal processes the same cards at 82.7%**
-
-The fallback processor dLocal is approving cards from the exact same Brazilian banks (Banco do Brasil, Itaú, Bradesco, Santander, Nubank) at **82.7%** — nearly identical to the prior period. If the problem were with the banks or the Brazilian market, dLocal would also be affected. It is not.
-
-| Processor | Current approval rate | Change vs prior period |
-|-----------|----------------------|------------------------|
-| EBANX (primary) | 54.6% | **-28.5 percentage points** |
-| dLocal (fallback) | 82.7% | +1.7 percentage points |
-
-**2. All banks and networks dropped simultaneously to the same level**
-
-Brazil's five major issuing banks (Banco do Brasil, Itaú, Bradesco, Santander, Nubank) dropped 28-30 percentage points simultaneously, all converging at ~54-55%. Visa, Mastercard, and Amex dropped almost identically. This mathematical uniformity cannot be the result of changes at individual banks — it can only be explained by a failure in the system mediating between EBANX and all banks: their authentication server.
-
-**3. The only error that exploded was the timeout**
-
-| Error code | Description | Before | Now | Change |
-|-----------|-------------|--------|-----|--------|
-| **91** | **Bank not responding (timeout)** | **412** | **3,825** | **+829%** |
-| 51 | Insufficient funds | 1,089 | 1,104 | +1.4% |
-| 05 | Generic decline | 502 | 518 | +3.2% |
-| 14 | Invalid card number | 238 | 245 | +2.9% |
-| 54 | Expired card | 179 | 184 | +2.8% |
-
-All other declines grew only 1-3%, consistent with normal volume growth. Code 91 grew 829%. It is a single-type failure with an identifiable origin.
-
----
-
-### What Did NOT Cause the Problem
-
-**The checkout update (Oct 31):** Implemented nearly four weeks before the drop. Approval rates remained stable through November 16. Declines from card data errors (codes 14 and 54) show no abnormal change.
-
-**PIX launch (Nov 8):** PIX operates on a completely separate payment network. Its approval rate is **93.0%**, stable and unchanged. It has no interaction with the card authorization system.
-
-**Banco do Brasil maintenance (Nov 20-21):** This maintenance window coincided with the start of the drop, but is not the root cause. The maintenance was marked complete and the rate continued falling for days afterward. Additionally, all other banks without maintenance dropped at exactly the same level as Banco do Brasil, and dLocal maintains 82.7% approval on Banco do Brasil cards during the same period.
-
----
-
-### Revenue Impact
-
-| | Prior period | Current period | Difference |
-|-|-------------|----------------|------------|
-| Approvals via EBANX | ~11,169/month | ~7,338/month | **-3,831 approvals** |
-| Recovery via dLocal | — | +98 additional | Partial mitigation |
-| **Net approval loss** | | | **~3,744/month** |
-
-**Estimated revenue impact:**
-- Conservative scenario (monthly subscriptions at $9.99): **~$37,400/month at risk**
-- Blended scenario (monthly + annual): **up to ~$127,000/month at risk**
-
-These figures reflect only payments that failed and were not recovered. They do not include subscription cancellations from customers who faced a decline and did not retry — which historically multiplies the impact 1.5×–2.5× in subscription businesses.
-
----
-
-### Argentina: A Different Situation
-
-Argentina's approval rate (54%) has shown no significant improvement for 8 weeks and is unrelated to the Brazil incident. Its cause is structural and macroeconomic.
-
-Argentina has annual inflation above 100% and strict capital controls that limit international card use. The primary decline types are insufficient funds and cards with bank-restricted limits — both reflecting the country's economic conditions, not integration failures.
-
-**The 51-54% rate is within market reference range** (52-58%) for subscription businesses in Argentina. Alternative processors available in Argentina show lower card approval rates, as Mercado Pago has an advantage through its direct relationships with major local banks. Switching processors in this market would worsen results, not improve them.
-
-**Recommendation:** Disabling Mercado Pago as a card processor is not recommended — it would reduce the approval rate by an estimated additional 3-5 percentage points.
-
----
-
-### Actions in Progress
-
-| Action | Owner | Status | Timeline |
-|--------|-------|--------|----------|
-| Activate dLocal as primary processor in Brazil (temporary) | Yuno | ✅ In progress | Immediate |
-| Escalate incident to EBANX with full code 91 evidence | Yuno | 🔄 In progress | 24 hours |
-| Request formal root cause analysis and rollback plan from EBANX | Yuno + EBANX | 🕐 Awaiting response | 48 hours |
-| Obtain full scope analysis by plan segment | Yuno + EBANX | 🕐 Awaiting data | 48 hours |
-| Review Brazil routing strategy post-resolution | Yuno | 🕐 Pending | Next week |
-
----
-
-### Confirmed vs. Still Pending
-
-**Confirmed:**
-- Problem is cards only. PIX and Boleto operating normally.
-- Problem is EBANX only. dLocal functioning at 82.7% under identical conditions.
-- The dominant error (code 91 — timeout) grew 829% at EBANX exclusively.
-- Uniformity of impact across all banks and networks points to EBANX's authentication server as origin.
-- The Argentina incident is independent and not a technical failure.
-
-**Pending confirmation:**
-- Formal root cause analysis and resolution plan from EBANX.
-- Fix timeline and stabilization criteria for reactivating EBANX as primary processor.
-- Full scope analysis by plan segment.
-
----
-
-*Next update: November 27, 2024 — or sooner if there are developments from EBANX.*
-*Direct contact for this incident: [TAM Name] — [email]*
-
----
-
-## 3.3 Pre-Call Speech Guide
+> **Note on delivery sequence:** The pre-call happens before the email and RCA are sent. Use this guide to set context with Claudia and Rafael, agree on reactivation criteria verbally, and neutralize the Argentina noise — then follow up in writing with §3.2 (email) and §3.3 (report). Sections are ordered here to match the operational sequence.
 
 **Participants:** Claudia Mendez (Head of Payments), Rafael Santos (CTO)
 **Led by:** Senior TAM, Yuno
@@ -796,6 +638,181 @@ That is the ideal close.
 
 ---
 
+## 3.2 RCA Delivery Email
+
+**To:** claudia.mendez@streamvibe.com
+**CC:** rafael.santos@streamvibe.com
+**Subject:** [StreamVibe] Root cause analysis — Brazil approval rate drop
+**Date:** November 25, 2024
+
+---
+
+Claudia, Rafael,
+
+Sharing the formal analysis of what is happening with Brazil's approval rates.
+
+**The key points in three bullets:**
+
+1. **The problem has been identified and localized.** The card decline (from 82.5% to 63.0%) is strongly correlated with an infrastructure update EBANX performed on November 15. Our analysis points to a regression in their authentication layer as the probable cause — which we are formally confirming with them. The rest of the ecosystem — PIX, Boleto, and dLocal — is operating normally.
+
+2. **Mitigation is already active.** We activated dLocal as the primary processor in Brazil on Yuno's side. This required no technical changes from StreamVibe. Transactions are being processed normally by dLocal (82.7% approval rate) while we work with EBANX on the definitive resolution.
+
+3. **Argentina is a separate issue.** The 54% rate in Argentina is not a technical failure — it is within local market benchmark and has macroeconomic causes. Disabling Mercado Pago would worsen that number. I explain it in detail in the attached report.
+
+---
+
+The attached document covers in detail: incident timeline, evidence confirming the root cause, what we ruled out, estimated revenue impact, and actions in progress with owners and timelines.
+
+We'll be in touch to coordinate the follow-up call. Any questions before then, I'll respond immediately.
+
+Best,
+[TAM Name]
+Technical Account Manager — Yuno
+[email] | [phone]
+
+---
+> 📎 Attachment: `streamvibe-brazil-auth-rate-rca-nov2024.pdf`
+
+---
+
+## 3.3 Merchant-Facing Incident Report
+
+**Incident status:** Active — under resolution
+**Audience:** Claudia Mendez (Head of Payments) · Rafael Santos (CTO)
+
+### Executive Summary
+
+Over the past week, StreamVibe experienced a significant drop in card payment approval rates in Brazil: from **81.2% to 68.0%** overall, and from **82.5% to 63.0%** for cards specifically. The problem is localized to a single payment processor — EBANX — and is strongly correlated with an infrastructure update performed on November 15. Our analysis points to a regression in their authentication layer as the probable cause, which we are formally confirming with EBANX.
+
+Alternative payment methods (PIX and Boleto) are functioning normally. The fallback processor, dLocal, is maintaining an 82.7% approval rate for the same affected cards, confirming the problem is exclusive to EBANX and does not reflect the behavior of the Brazilian market or issuing banks. The Argentina situation is independent with a different cause, detailed at the end of this report.
+
+---
+
+### What Is Happening?
+
+When a customer attempts to pay by card in Brazil, the transaction goes through an identity verification process called **3DS authentication** (where the bank asks the customer to confirm the purchase via SMS, app, or password). EBANX acts as the intermediary between StreamVibe and the issuing banks to manage this process.
+
+On November 15, EBANX performed a technical update to the server that manages these authentications. Starting November 20, that server began generating excessive response times when communicating with Brazilian issuing banks. As a result, banks interpret the lack of timely response and decline the transaction with error code **91 ("issuer timeout")**.
+
+This error went from representing **3% of declines** to causing **62.8% of all EBANX declines**, with an increase of **829%** in absolute volume. All other decline types (insufficient funds, expired card, etc.) remain at normal levels.
+
+---
+
+### Incident Timeline
+
+| Date | Event |
+|------|--------|
+| Nov 2 | Yuno updates Brazil routing: EBANX becomes primary processor |
+| Nov 10 | Approval rate via EBANX: **82.8%** — normal operation |
+| Nov 15 | EBANX implements update to its 3DS authentication infrastructure |
+| Nov 16 | Approval rate via EBANX: **81.9%** — still stable |
+| Nov 20-21 | Banco do Brasil scheduled maintenance (3DS) — marked complete Nov 21 evening |
+| Nov 21 | EBANX approval rate drops to **68.2%**. Timeout error rises from ~3% to 61% of declines |
+| Nov 24 | EBANX approval rate: **54.6%** — continues deteriorating |
+| Nov 25 | Yuno has activated mitigation via dLocal. Active escalation with EBANX |
+
+---
+
+### Evidence Confirming the Root Cause
+
+**1. dLocal processes the same cards at 82.7%**
+
+The fallback processor dLocal is approving cards from the exact same Brazilian banks (Banco do Brasil, Itaú, Bradesco, Santander, Nubank) at **82.7%** — nearly identical to the prior period. If the problem were with the banks or the Brazilian market, dLocal would also be affected. It is not.
+
+| Processor | Current approval rate | Change vs prior period |
+|-----------|----------------------|------------------------|
+| EBANX (primary) | 54.6% | **-28.5 percentage points** |
+| dLocal (fallback) | 82.7% | +1.7 percentage points |
+
+**2. All banks and networks dropped simultaneously to the same level**
+
+Brazil's five major issuing banks (Banco do Brasil, Itaú, Bradesco, Santander, Nubank) dropped 28-30 percentage points simultaneously, all converging at ~54-55%. Visa, Mastercard, and Amex dropped almost identically. This mathematical uniformity cannot be the result of changes at individual banks — it can only be explained by a failure in the system mediating between EBANX and all banks: their authentication server.
+
+**3. The only error that exploded was the timeout**
+
+| Error code | Description | Before | Now | Change |
+|-----------|-------------|--------|-----|--------|
+| **91** | **Bank not responding (timeout)** | **412** | **3,825** | **+829%** |
+| 51 | Insufficient funds | 1,089 | 1,104 | +1.4% |
+| 05 | Generic decline | 502 | 518 | +3.2% |
+| 14 | Invalid card number | 238 | 245 | +2.9% |
+| 54 | Expired card | 179 | 184 | +2.8% |
+
+All other declines grew only 1-3%, consistent with normal volume growth. Code 91 grew 829%. It is a single-type failure with an identifiable origin.
+
+---
+
+### What Did NOT Cause the Problem
+
+**The checkout update (Oct 31):** Implemented nearly four weeks before the drop. Approval rates remained stable through November 16. Declines from card data errors (codes 14 and 54) show no abnormal change.
+
+**PIX launch (Nov 8):** PIX operates on a completely separate payment network. Its approval rate is **93.0%**, stable and unchanged. It has no interaction with the card authorization system.
+
+**Banco do Brasil maintenance (Nov 20-21):** This maintenance window coincided with the start of the drop, but is not the root cause. The maintenance was marked complete and the rate continued falling for days afterward. Additionally, all other banks without maintenance dropped at exactly the same level as Banco do Brasil, and dLocal maintains 82.7% approval on Banco do Brasil cards during the same period.
+
+---
+
+### Revenue Impact
+
+| | Prior period | Current period | Difference |
+|-|-------------|----------------|------------|
+| Approvals via EBANX | ~11,169/month | ~7,338/month | **-3,831 approvals** |
+| Recovery via dLocal | — | +98 additional | Partial mitigation |
+| **Net approval loss** | | | **~3,744/month** |
+
+**Estimated revenue impact:**
+- Conservative scenario (monthly subscriptions at $9.99): **~$37,400/month at risk**
+- Blended scenario (monthly + annual): **up to ~$127,000/month at risk**
+
+These figures reflect only payments that failed and were not recovered. They do not include subscription cancellations from customers who faced a decline and did not retry — which historically multiplies the impact 1.5×–2.5× in subscription businesses.
+
+---
+
+### Argentina: A Different Situation
+
+Argentina's approval rate (54%) has shown no significant improvement for 8 weeks and is unrelated to the Brazil incident. Its cause is structural and macroeconomic.
+
+Argentina has annual inflation above 100% and strict capital controls that limit international card use. The primary decline types are insufficient funds and cards with bank-restricted limits — both reflecting the country's economic conditions, not integration failures.
+
+**The 51-54% rate is within market reference range** (52-58%) for subscription businesses in Argentina. Alternative processors available in Argentina show lower card approval rates, as Mercado Pago has an advantage through its direct relationships with major local banks. Switching processors in this market would worsen results, not improve them.
+
+**Recommendation:** Disabling Mercado Pago as a card processor is not recommended — it would reduce the approval rate by an estimated additional 3-5 percentage points.
+
+---
+
+### Actions in Progress
+
+| Action | Owner | Status | Timeline |
+|--------|-------|--------|----------|
+| Activate dLocal as primary processor in Brazil (temporary) | Yuno | ✅ In progress | Immediate |
+| Escalate incident to EBANX with full code 91 evidence | Yuno | 🔄 In progress | 24 hours |
+| Request formal root cause analysis and rollback plan from EBANX | Yuno + EBANX | 🕐 Awaiting response | 48 hours |
+| Obtain full scope analysis by plan segment | Yuno + EBANX | 🕐 Awaiting data | 48 hours |
+| Review Brazil routing strategy post-resolution | Yuno | 🕐 Pending | Next week |
+
+---
+
+### Confirmed vs. Still Pending
+
+**Confirmed:**
+- Problem is cards only. PIX and Boleto operating normally.
+- Problem is EBANX only. dLocal functioning at 82.7% under identical conditions.
+- The dominant error (code 91 — timeout) grew 829% at EBANX exclusively.
+- Uniformity of impact across all banks and networks points to EBANX's authentication server as origin.
+- The Argentina incident is independent and not a technical failure.
+
+**Pending confirmation:**
+- Formal root cause analysis and resolution plan from EBANX.
+- Fix timeline and stabilization criteria for reactivating EBANX as primary processor.
+- Full scope analysis by plan segment.
+
+---
+
+*Next update: November 27, 2024 — or sooner if there are developments from EBANX.*
+*Direct contact for this incident: [TAM Name] — [email]*
+
+---
+
 ---
 
 # Section 4: Proactive Optimization Recommendations
@@ -866,7 +883,7 @@ There is also a structural pricing problem that is independent of payment method
 | Cards (Mercado Pago) | 51.0% | 52-58% | — |
 | **Mercado Pago wallet** | **66.1%** | 64-70% | **+15.1pp** |
 
-If wallet share in Argentina volume grows from current (~20%) to 40%, StreamVibe gains ~2,200 additional transactions processed at 66% instead of 51%. At $9.99 average ticket, this is approximately **+$330 in monthly approvals per 1,000 Argentine subscribers** migrated to wallet — with no processor change.
+If wallet share in Argentina volume grows from current (~20%, estimated from attempt-volume distribution in the analysis period) to 40%, StreamVibe gains ~2,200 additional transactions processed at 66% instead of 51%. At $9.99 average ticket, this is approximately **+$330 in monthly approvals per 1,000 Argentine subscribers** migrated to wallet — with no processor change.
 
 ### Recommended Actions
 
@@ -957,6 +974,8 @@ A portion of card declines correspond to expired or replaced cards (codes 54 and
 **Combined improvement potential (conservative estimate): +$17,800–$45,200/month across all markets**
 
 Items 1 and 2 have the highest impact ceiling and require medium engineering effort. Items 3-6 are quick wins that require no or minimal engineering changes, activatable in 1-2 weeks.
+
+> **Engineering note for items 1 and 2:** Recommendations 1 (PIX Automático) and 2 (Tokenization + MIT) share the same engineering entry point — the subscriber signup/onboarding flow. PIX Automático requires collecting a PIX mandate at signup; Tokenization + MIT requires tokenizing the card at the initial CIT transaction. Both touch the same code path. These should be scoped as a **single combined sprint** rather than two sequential 4-6 week projects. Yuno will provide a unified integration spec covering both changes to minimize StreamVibe engineering overhead.
 
 ---
 
