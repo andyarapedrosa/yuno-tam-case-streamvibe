@@ -34,9 +34,12 @@ Internal files are kept in English (`.md`). Merchant-facing files are in Spanish
 ├── 04-proactive-optimizations/
 │   └── proactive-optimizations-es.md         # [ES] Proactive optimization recommendations
 │
-└── deliverable/
-    ├── executive-summary-es.md               # [ES] One-page executive summary for merchant sharing
-    └── streamvibe-latam-auth-crisis-final.md  # [EN] Consolidated final document — Sections 1–4
+├── deliverable/
+│   ├── executive-summary-es.md               # [ES] One-page executive summary for merchant sharing
+│   └── streamvibe-latam-auth-crisis-final.md  # [EN] Consolidated final document — Sections 1–4
+│
+└── analysis/
+    └── rubric-scorecard.md                   # [EN] PASS/FAIL audit across 10 scoring dimensions + edit log
 ```
 
 ## Key Findings (TL;DR)
