@@ -174,8 +174,10 @@ Supporting evidence chain:
 |----------|---------------|
 | Conservative (100% monthly plan, avg $9.99) | **~$37,402/month** |
 | Blended (70% monthly / 30% annual, $89.99) | **~$127,000/month** |
+| Churn-adjusted conservative (1.5×–2.5× multiplier) | **~$56,000–$94,000/month** |
+| Churn-adjusted blended (1.5×–2.5× multiplier) | **~$190,000–$318,000/month** |
 
-These figures represent only failed charge attempts. Downstream subscriber churn from customers who did not retry is unquantified but typically multiplies 1.5×–2.5× the immediate revenue impact for subscription businesses.
+The first two rows represent failed charge attempts only. The churn-adjusted rows apply the standard 1.5×–2.5× LTV multiplier for subscription businesses — subscribers who experienced a failed renewal and did not retry represent lost MRR for the remaining duration of their subscription, not just one missed payment. The churn-adjusted blended figure (~$190K–$318K/month) is the most relevant number for a P&L or CFO-level conversation.
 
 ---
 
@@ -240,6 +242,8 @@ Argentina is excluded from this plan — it requires a separate strategic discus
 |----------|--------|-------|----------|----------------|
 | P0 | Maintain dLocal as Brazil primary | Yuno | ✅ Done | Stabilizes AR at ~82.7% |
 | P0 | Formal escalation to EBANX with full evidence package | Yuno | 24h | Unblocks resolution timeline |
+| P1 | **Confirm Amex routing path through EBANX** (A2.1) | Yuno | 24h | Determines if failure scope extends beyond 3DS |
+| P1 | **Request transaction-amount breakdown from EBANX** (A2.2) | Yuno | 24h | Confirms or changes root cause classification |
 | P1 | Define EBANX reactivation criteria | Yuno + StreamVibe | 48h | Prevents premature rollback |
 | P1 | EBANX: formal RCA + fix ETA | EBANX | 48–72h | Closes root cause loop |
 | P2 | Retry logic for soft decline code 91 | Yuno | 1 week | Recovers retryable declines |
@@ -279,6 +283,38 @@ Specific requests to EBANX:
 6. Post-incident protocol: what change control notification does EBANX commit to for future infrastructure updates?
 
 **Expected output:** EBANX P1 ticket acknowledged in 24h, RCA + fix timeline in 72h.
+
+---
+
+### A2.1 — Confirm Amex Routing Path Through EBANX [P1]
+**Owner:** Yuno | **Timeline:** 24 hours (include in the A2 escalation package)
+
+EBANX's DS v2.2 upgrade was scoped to Visa and Mastercard only. Yet Amex declined ~26pp — nearly identically to Visa (-30pp) and Mastercard (-27pp). Two mutually exclusive explanations exist:
+
+- **Amex routes through the same DS v2.2 layer** despite not being in the stated scope — meaning the upgrade's actual blast radius is wider than documented.
+- **Amex routes through a separate path** (direct auth API, legacy DS) and is independently degraded — meaning EBANX has a second, unrelated failure mode active simultaneously.
+
+Request from EBANX: does Amex flow through the updated DS v2.2, a separate directory server, or a direct authorization path?
+
+**Why this matters:** If Amex uses a separate path and is still degraded, the root cause is not limited to 3DS routing — it implicates EBANX's general authorization layer. This would change the fix path, the rollback scope, and the risk assessment for restoring EBANX as primary.
+
+---
+
+### A2.2 — Request Transaction-Amount Breakdown From EBANX [P1]
+**Owner:** Yuno | **Timeline:** 24 hours (include in the A2 escalation package)
+
+The current analysis cannot confirm whether $9.99 monthly plan transactions (below the $50 USD 3DS threshold — no 3DS triggered) are also declining at ~54%, or whether the decline is concentrated in $89.99 annual plan transactions (above threshold — 3DS triggered).
+
+Request from EBANX: provide a breakdown of Brazil decline rates by transaction amount — specifically above and below the $50 USD threshold — for the period Nov 15–24.
+
+**Why this matters:** This is the single most diagnostic unknown in the entire analysis.
+
+| If result is... | Implication |
+|-----------------|-------------|
+| $9.99 transactions declining at ~54% | The failure is **not 3DS-specific** — it affects EBANX's general authorization API. The root cause classification changes. EBANX needs to investigate beyond the DS layer. |
+| $9.99 transactions declining near normal (~82%) | The failure **is 3DS-specific** as hypothesized. Hypothesis 1 is fully confirmed. Fix scope is contained to the DS routing layer. |
+
+Without this data point, "high confidence" in the 3DS regression hypothesis carries a material asterisk.
 
 ---
 
@@ -379,6 +415,8 @@ Current 3DS trigger in Brazil is set at **>$50 USD**. StreamVibe's pricing:
 |--------|------|------------|-------|
 | dLocal as primary (A1) | **R** | I | — |
 | EBANX escalation (A2) | **R** | I | A |
+| Confirm Amex routing path (A2.1) | **R** | I | A |
+| Request amount segmentation data (A2.2) | **R** | I | A |
 | Reactivation criteria (A3) | **R** | **A** | I |
 | Root cause + fix (A4) | I/escalate | I | **R** |
 | Code 91 retry logic (A5) | **R** | I | — |
